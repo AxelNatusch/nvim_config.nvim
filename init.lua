@@ -313,35 +313,53 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 -- AXEL Keymaps
+vim.g.copilot_filetypes = { markdown = true }
+
+vim.keymap.set('n', '<leader>nn', ':ObsidianNew<CR>')
+vim.keymap.set('n', '<leader>it', ':ObsidianTemplate<CR>')
+vim.keymap.set('n', '<leader>today', ':ObsidianToday<CR>')
+vim.keymap.set('n', '<leader>tt', ':ObsidianTomorrow<CR>')
+vim.keymap.set('n', '<leader>yy', ':ObsidianYesterday<CR>')
 
 -- copy whole file
-vim.keymap.set("n", "<leader>YY", "gg V G y")
+vim.keymap.set('n', '<leader>YY', 'gg V G y')
 
 vim.keymap.set('n', '<leader>,', ':DBUI<CR>')
-vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>")
-vim.keymap.set("n", "x", '"_x')
-vim.keymap.set("i", "jk", "<ESC>")
-vim.keymap.set("v", "jk", "<ESC>")
+vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>')
+vim.keymap.set('n', 'x', '"_x')
+vim.keymap.set('i', 'jk', '<ESC>')
+vim.keymap.set('v', 'jk', '<ESC>')
 
-vim.keymap.set("n", "gh", "0")
-vim.keymap.set("n", "gl", "$")
-vim.keymap.set("v", "gh", "0")
-vim.keymap.set("v", "gl", "$")
+vim.keymap.set('n', 'gh', '0')
+vim.keymap.set('n', 'gl', '$')
+vim.keymap.set('v', 'gh', '0')
+vim.keymap.set('v', 'gl', '$')
 
-local harpoon = require("harpoon")
+local harpoon = require 'harpoon'
 
 harpoon:setup()
 
-vim.keymap.set("n", "<leader>g", function() harpoon:list():append() end)
-vim.keymap.set("n", "<leader>p", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+vim.keymap.set('n', '<leader>g', function()
+  harpoon:list():append()
+end)
+vim.keymap.set('n', '<leader>p', function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end)
 
-vim.keymap.set("n", "*", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "(", function() harpoon:list():select(2) end)
-vim.keymap.set("n", ")", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "=", function() harpoon:list():select(4) end)
+vim.keymap.set('n', '*', function()
+  harpoon:list():select(1)
+end)
+vim.keymap.set('n', '(', function()
+  harpoon:list():select(2)
+end)
+vim.keymap.set('n', ')', function()
+  harpoon:list():select(3)
+end)
+vim.keymap.set('n', '=', function()
+  harpoon:list():select(4)
+end)
 -- vim.keymap.set("n", "[", function() harpoon:list():next() end)
 -- vim.keymap.set("n", "]", function() harpoon:list():prev() end)
-
 
 -- [[ Basic Keymaps ]]
 
@@ -456,8 +474,27 @@ vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash' },
+    ensure_installed = {
+      'c',
+      'cpp',
+      'go',
+      'lua',
+      'python',
+      'rust',
+      'tsx',
+      'javascript',
+      'typescript',
+      'vimdoc',
+      'vim',
+      'bash',
+      'html',
+      'css',
+      'json',
+      'yaml',
+      'dockerfile',
+      'markdown',
+      'markdown_inline',
+    },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = true,
@@ -491,21 +528,21 @@ vim.defer_fn(function()
         enable = true,
         set_jumps = true, -- whether to set jumps in the jumplist
         goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
+          ['[]'] = '@function.outer',
           ['[['] = '@class.outer',
         },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
+        -- goto_next_end = {
+        --   [']['] = '@function.outer',
+        --   [']]'] = '@class.outer',
+        -- },
+        goto_previous_start = {
+          [']['] = '@function.outer',
+          [']]'] = '@class.outer',
         },
+        -- goto_previous_end = {
+        --   ['[M'] = '@function.outer',
+        --   ['[]'] = '@class.outer',
+        -- },
       },
       swap = {
         enable = true,
@@ -665,7 +702,7 @@ cmp.setup {
       behavior = cmp.ConfirmBehavior.Replace,
       select = true,
     },
-    ['<Tab>'] = cmp.mapping(function(fallback)
+    ['<Tab>i'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
       elseif luasnip.expand_or_locally_jumpable() then
